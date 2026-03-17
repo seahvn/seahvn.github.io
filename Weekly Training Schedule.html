@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)file:///C:/Users/aaron/Downloads/weekly_schedule.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Training Schedule</title>
+<link href="./Weekly Training Schedule_files/css2" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bike:   #C00000;
+    --run:    #4CAF50;
+    --swim:   #5BA3C9;
+    --race:   #FFD700;
+    --bg:     #0a0a0a;
+    --surface:#111111;
+    --border: #222222;
+    --text:   #f0f0f0;
+    --muted:  #666666;
+    --today:  #FFD700;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(90deg, #6a0dad, #C00000);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .week-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .week-nav button {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .week-nav button:hover { background: rgba(255,255,255,0.3); }
+
+  .week-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .today-btn {
+    background: rgba(255,215,0,0.2) !important;
+    border-color: #FFD700 !important;
+    color: #FFD700 !important;
+  }
+
+  /* Notes bar */
+  .notes-bar {
+    background: #1a0a00;
+    border-bottom: 1px solid #3a1a00;
+    padding: 5px 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #C00000;
+    text-transform: uppercase;
+    min-height: 26px;
+    flex-shrink: 0;
+  }
+
+  /* Grid */
+  .grid-wrap {
+    flex: 1;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 90px repeat(7, 1fr);
+    height: 100%;
+  }
+
+  /* Column headers */
+  .col-header {
+    background: #111;
+    border-bottom: 2px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 8px 4px;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .col-header.today-col {
+    color: var(--today);
+    border-bottom-color: var(--today);
+  }
+
+  .col-header .day-num {
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+  }
+  .col-header.today-col .day-num {
+    color: var(--today);
+  }
+
+  .col-header .day-name {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  /* Type label column */
+  .type-label {
+    background: #0d0d0d;
+    border-right: 2px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 4px;
+  }
+
+  .type-badge {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .type-badge.Bike { background: var(--bike); color: #fff; }
+  .type-badge.Run  { background: var(--run);  color: #fff; }
+  .type-badge.Swim { background: var(--swim); color: #fff; }
+  .type-badge.Race { background: var(--race); color: #111; }
+
+  /* Workout cells */
+  .cell {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    vertical-align: top;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cell.has-workout {
+    cursor: default;
+  }
+
+  .cell.Bike { background: rgba(192,0,0,0.12); }
+  .cell.Run  { background: rgba(76,175,80,0.12); }
+  .cell.Swim { background: rgba(91,163,201,0.12); }
+  .cell.Race { background: rgba(255,215,0,0.12); }
+
+  .cell.today-col { border-right: 1px solid rgba(255,215,0,0.3); border-left: 1px solid rgba(255,215,0,0.3); }
+  .cell.today-col:first-of-type { border-left: 2px solid var(--today); }
+
+  .workout-text {
+    font-family: 'Barlow', sans-serif;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  .workout-text .main { font-weight: 600; }
+  .workout-text .detail { color: #aaa; font-size: 10.5px; }
+
+  .rest-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #333;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  /* Today highlight on cell */
+  .cell.today-col.has-workout::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--today);
+  }
+
+  /* Type icon */
+  .type-icon { font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-title">Weekly Schedule</div>
+    <div class="week-nav">
+      <button onclick="changeWeek(-1)">←</button>
+      <div class="week-label" id="weekLabel">Week 1</div>
+      <button onclick="changeWeek(1)">→</button>
+      <button class="today-btn" onclick="goToToday()">Today</button>
+    </div>
+  </div>
+  <div class="notes-bar" id="notesBar"></div>
+  <div class="grid-wrap">
+    <div class="grid" id="grid" style="grid-template-rows: 52px repeat(3, 1fr);"><div class="col-header" style="border-right: 2px solid rgb(34, 34, 34);"></div><div class="col-header"><div class="day-num">15</div><div class="day-name">Mon</div></div><div class="col-header today-col"><div class="day-num">16</div><div class="day-name">Tue</div></div><div class="col-header"><div class="day-num">17</div><div class="day-name">Wed</div></div><div class="col-header"><div class="day-num">18</div><div class="day-name">Thu</div></div><div class="col-header"><div class="day-num">19</div><div class="day-name">Fri</div></div><div class="col-header"><div class="day-num">20</div><div class="day-name">Sat</div></div><div class="col-header"><div class="day-num">21</div><div class="day-name">Sun</div></div><div class="type-label"><span class="type-icon">🚴</span><span class="type-badge Bike">Bike</span></div><div class="cell"><div class="rest-label">REST</div></div><div class="cell has-workout Bike today-col"><div class="workout-text"><span class="main">Interval Bike: 1 hr</span><br><span class="detail">6×20 sec sprints</span></div></div><div class="cell"></div><div class="cell has-workout Bike"><div class="workout-text"><span class="main">Easy Bike: 1 hr</span></div></div><div class="cell"></div><div class="cell has-workout Bike"><div class="workout-text"><span class="main">Endurance Bike: 100 km</span></div></div><div class="cell"></div><div class="type-label"><span class="type-icon">🏃</span><span class="type-badge Run">Run</span></div><div class="cell"></div><div class="cell today-col"></div><div class="cell has-workout Run"><div class="workout-text"><span class="main">Easy Run: 9 km</span></div></div><div class="cell"></div><div class="cell has-workout Run"><div class="workout-text"><span class="main">Interval Run</span><br><span class="detail">40 min w/ 6×20 sec relaxed sprints</span></div></div><div class="cell"></div><div class="cell has-workout Run"><div class="workout-text"><span class="main">Endurance Run: 10 km</span></div></div><div class="type-label"><span class="type-icon">🏊</span><span class="type-badge Swim">Swim</span></div><div class="cell"></div><div class="cell has-workout Swim today-col"><div class="workout-text"><span class="main">Interval Swim</span><br><span class="detail">MS: 8×25m (1,000m total)</span></div></div><div class="cell"></div><div class="cell has-workout Swim"><div class="workout-text"><span class="main">Interval Swim</span><br><span class="detail">MS: 4×100m (1,000m total)</span></div></div><div class="cell"></div><div class="cell"></div><div class="cell has-workout Swim"><div class="workout-text"><span class="main">Endurance Swim: 1,000m</span></div></div></div>
+  </div>
+</div>
+
+<script>
+const PLAN = {"Week 1": {"week_num": 1, "mon_date": "2026-03-16", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 6\u00d720 sec sprints", "Swim": "Interval Swim | MS: 8\u00d725m (1,000m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 4\u00d7100m (1,000m total)"}, "Sat": {"Bike": "Endurance Bike: 100 km"}, "Wed": {"Run": "Easy Run: 9 km"}, "Fri": {"Run": "Interval Run | 40 min w/ 6\u00d720 sec relaxed sprints"}, "Sun": {"Run": "Endurance Run: 10 km", "Swim": "Endurance Swim: 1,000m"}}, "notes": []}, "Week 2": {"week_num": 2, "mon_date": "2026-03-23", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 8\u00d720 sec sprints", "Swim": "Interval Swim | MS: 10\u00d725m (1,100m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 5\u00d7100m (1,100m total)"}, "Sat": {"Bike": "Endurance Bike: 105 km"}, "Wed": {"Run": "Easy Run: 9 km"}, "Fri": {"Run": "Interval Run | 40 min w/ 8\u00d720 sec relaxed sprints"}, "Sun": {"Run": "Endurance Run: 12 km", "Swim": "Endurance Swim: 1,250m"}}, "notes": []}, "Week 3": {"week_num": 3, "mon_date": "2026-03-30", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 10\u00d720 sec sprints", "Swim": "Interval Swim | MS: 12\u00d725m (1,200m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 6\u00d7100m (1,200m total)"}, "Sat": {"Bike": "Endurance Bike: 110 km"}, "Wed": {"Run": "Easy Run: 9 km"}, "Fri": {"Run": "Interval Run | 45 min w/ 8\u00d720 sec relaxed sprints"}, "Sun": {"Run": "Endurance Run: 13 km", "Swim": "Endurance Swim: 1,500m"}}, "notes": []}, "Week 4": {"week_num": 4, "mon_date": "2026-04-06", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 6\u00d720 sec sprints", "Swim": "Interval Swim | MS: 10\u00d725m (1,200m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 5\u00d7100m (1,200m total)"}, "Sat": {"Bike": "Endurance Bike: 100 km"}, "Wed": {"Run": "Easy Run: 9 km"}, "Fri": {"Run": "Interval Run | 40 min w/ 6\u00d720 sec relaxed sprints"}, "Sun": {"Run": "Endurance Run: 10 km", "Swim": "Endurance Swim: 1,200m"}}, "notes": ["RECOVERY WEEK"]}, "Week 5": {"week_num": 5, "mon_date": "2026-04-13", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr | Last 15 min comfortably hard", "Swim": "Interval Swim | MS: 10\u00d750m (1,500m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 4\u00d7150m (1,500m total)"}, "Sat": {"Bike": "Endurance Bike: 115 km"}, "Wed": {"Run": "Easy Run: 9 km"}, "Fri": {"Run": "Interval Run | 40 min w/ 6\u00d71 min fast"}, "Sun": {"Run": "Endurance Run: 15 km", "Swim": "Endurance Swim: 1,700m"}}, "notes": []}, "Week 6": {"week_num": 6, "mon_date": "2026-04-20", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 8\u00d71 min fast uphill", "Swim": "Interval Swim | MS: 8\u00d750m, 8\u00d725m (1,600m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 4\u00d7200m (1,600m total)"}, "Sat": {"Bike": "Endurance Bike: 120 km"}, "Wed": {"Run": "Easy Run: 10 km"}, "Fri": {"Run": "Tempo Run | 45 min w/ last 15 min comfortably hard"}, "Sun": {"Run": "Endurance Run: 17 km", "Swim": "Swim Time Trial | MS: 800m (1,800m total)"}}, "notes": ["Swim Time Trial"]}, "Week 7": {"week_num": 7, "mon_date": "2026-04-27", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr | Last 20 min comfortably hard", "Swim": "Interval Swim | MS: 12\u00d750m (1,700m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 5\u00d7150m (1,700m total)"}, "Sat": {"Bike": "Endurance Bike: 125 km", "Run": "T-Run: 10 min easy"}, "Wed": {"Run": "Easy Run: 10 km"}, "Fri": {"Run": "Interval Run | 40 min w/ 10\u00d71 min fast uphill"}, "Sun": {"Run": "Endurance Run: 18 km", "Swim": "Endurance Swim: 2,100m"}}, "notes": ["Transition runs begin"]}, "Week 8": {"week_num": 8, "mon_date": "2026-05-04", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 6\u00d790 sec fast", "Swim": "Interval Swim | MS: 16\u00d750m (1,500m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 8\u00d7100m (1,500m total)"}, "Sat": {"Bike": "Endurance Bike: 100 km"}, "Wed": {"Run": "Easy Run: 10 km"}, "Fri": {"Run": "Tempo Run | 45 min w/ last 15 min comfortably hard"}, "Sun": {"Run": "Endurance Run: 13 km", "Swim": "Endurance Swim | 1,600m steady (1,800m total)"}}, "notes": ["RECOVERY WEEK"]}, "Week 9": {"week_num": 9, "mon_date": "2026-05-11", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr | Last 20 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 8\u00d775m (1,900m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 4\u00d7250m (1,900m total)"}, "Sat": {"Bike": "toMTL Day 1: 300 km"}, "Sun": {"Bike": "toMTL Day 2: 300 km"}, "Wed": {"Run": "Easy Run: 10 km"}, "Fri": {"Run": "Interval Run | 45 min w/ 8\u00d72 min fast"}}, "notes": []}, "Week 10": {"week_num": 10, "mon_date": "2026-05-18", "days": {"Sat": {"Bike": "Endurance Bike: 120 km", "Run": "T-Run: 15 min easy"}, "Fri": {"Run": "Tempo Run | 50 min w/ last 20 min comfortably hard"}, "Sun": {"Run": "Endurance Run: 17 km", "Swim": "Endurance Swim: 2,700m"}, "Thu": {"Swim": "Interval Swim | MS: 6\u00d7150m (2,100m total)"}}, "notes": []}, "Week 11": {"week_num": 11, "mon_date": "2026-05-25", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr | Last 20 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 10\u00d775m, 10\u00d725m (2,300m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 5\u00d7200m (2,300m total)"}, "Sat": {"Bike": "Endurance Bike: 140 km", "Run": "T-Run: 10 min easy"}, "Wed": {"Run": "Easy Run: 10 km"}, "Fri": {"Run": "Interval Run | 45 min w/ 8\u00d72 min fast"}, "Sun": {"Run": "Endurance Run: 21 km", "Swim": "Endurance Swim: 3,000m"}}, "notes": []}, "Week 12": {"week_num": 12, "mon_date": "2026-06-01", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 8\u00d71 min fast", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 15\u00d750m (1,800m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 12\u00d7100m (1,800m total)"}, "Sat": {"Bike": "Endurance Bike: 120 km", "Run": "T-Run: 15 min easy"}, "Wed": {"Run": "Easy Run: 10 km"}, "Fri": {"Run": "Tempo Run | 40 min w/ last 12 min comfortably hard"}, "Sun": {"Run": "Endurance Run: 17 km", "Swim": "Endurance Swim: 2,400m"}}, "notes": ["RECOVERY WEEK"]}, "Week 13": {"week_num": 13, "mon_date": "2026-06-08", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr 10 min | Last 20 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 18\u00d750m (2,500m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 4\u00d7300m (2,500m total)"}, "Sat": {"Bike": "Endurance Bike: 140 km", "Run": "T-Run: 10 min easy"}, "Wed": {"Run": "Easy Run: 11 km"}, "Fri": {"Run": "Interval Run | 50 min w/ 10\u00d72 min fast"}, "Sun": {"Run": "Endurance Run: 23 km", "Swim": "Endurance Swim: 3,000m"}}, "notes": []}, "Week 14": {"week_num": 14, "mon_date": "2026-06-15", "days": {"Tue": {"Bike": "Interval Bike: 1 hr 10 min | 10\u00d72 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 8\u00d7100m, 8\u00d725m (2,600m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr 15 min", "Swim": "Interval Swim | MS: 2\u00d7400m, 4\u00d7100m (2,600m total)"}, "Sat": {"Bike": "Endurance Bike: 130 km", "Run": "T-Run: 20 min easy"}, "Wed": {"Run": "Easy Run: 11 km"}, "Fri": {"Run": "Tempo Run | 1 hr w/ last 20 min comfortably hard"}, "Sun": {"Run": "Endurance Run: 18 km", "Swim": "Endurance Swim: 3,300m"}}, "notes": []}, "Week 15": {"week_num": 15, "mon_date": "2026-06-22", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr 15 min | Last 25 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 6\u00d775m, 6\u00d750m (2,800m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr 15 min", "Swim": "Interval Swim | MS: 4\u00d7300m, 4\u00d7100m (2,800m total)"}, "Sat": {"Bike": "Endurance Bike: 145 km", "Run": "T-Run: 10 min easy"}, "Wed": {"Run": "Easy Run: 12 km"}, "Fri": {"Run": "Interval Run | 55 min w/ 5\u00d73 min fast"}, "Sun": {"Run": "Endurance Run: 26 km", "Swim": "Endurance Swim: 3,800m"}}, "notes": ["Peak long ride week"]}, "Week 16": {"week_num": 16, "mon_date": "2026-06-29", "days": {"Tue": {"Bike": "Interval Bike: 1 hr | 10\u00d72 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 16\u00d750m (2,300m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 2\u00d7400m, 4\u00d7100m (2,300m total)"}, "Sat": {"Bike": "Endurance Bike: 81 km", "Run": "T-Run: 15 min easy"}, "Wed": {"Run": "Easy Run: 10 km"}, "Fri": {"Run": "Tempo Run | 50 min w/ last 15 min comfortably hard"}, "Sun": {"Run": "Endurance Run: 17 km", "Swim": "Swim Time Trial | MS: 1,650m (2,400m total)"}}, "notes": ["RECOVERY WEEK\nSwim Time Trial"]}, "Week 17": {"week_num": 17, "mon_date": "2026-07-06", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr 20 min | Last 30 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 10\u00d7100m, 10\u00d750m (3,000m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr 20 min", "Swim": "Interval Swim | MS: 4\u00d7400m (3,000m total)"}, "Sat": {"Bike": "Endurance Bike: 161 km", "Run": "T-Run: 10 min easy"}, "Wed": {"Run": "Easy Run: 12 km"}, "Fri": {"Run": "Interval Run | 1 hr w/ 3\u00d75 min fast"}, "Sun": {"Run": "Endurance Run: 29 km", "Swim": "Endurance Swim: 4,000m"}}, "notes": ["\u26a0\ufe0f PEAK WEEK"]}, "Week 18": {"week_num": 18, "mon_date": "2026-07-13", "days": {"Tue": {"Bike": "Interval Bike: 1 hr 20 min | 3\u00d75 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 8\u00d775m, 8\u00d750m, 8\u00d725m (3,000m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr 30 min", "Swim": "Interval Swim | MS: 4\u00d7300m, 4\u00d7100m (3,000m total)"}, "Sat": {"Bike": "Endurance Bike: 113 km", "Run": "T-Run: 1 hr easy"}, "Wed": {"Run": "Easy Run: 12 km"}, "Fri": {"Run": "Tempo Run | 1 hr w/ last 25 min comfortably hard"}, "Sun": {"Run": "Easy Run: 9 km", "Swim": "Endurance Swim: 4,000m"}}, "notes": []}, "Week 19": {"week_num": 19, "mon_date": "2026-07-20", "days": {"Tue": {"Bike": "Tempo Bike: 1 hr | Last 20 min hard", "Run": "+ T-Run: 10 min easy", "Swim": "Interval Swim | MS: 10\u00d7100m, 10\u00d750m (2,600m total)"}, "Thu": {"Bike": "Easy Bike: 1 hr", "Swim": "Interval Swim | MS: 4\u00d7400m (2,600m total)"}, "Sat": {"Bike": "Endurance Bike: 81 km", "Run": "T-Run: 10 min easy"}, "Wed": {"Run": "Easy Run: 12 km"}, "Fri": {"Run": "Interval Run | 45 min w/ 6\u00d72 min fast"}, "Sun": {"Run": "Endurance Run: 17 km", "Swim": "Endurance Swim: 4,000m"}}, "notes": ["Taper begins"]}, "Week 20": {"week_num": 20, "mon_date": "2026-07-27", "days": {"Tue": {"Bike": "Interval Bike: 45 min | 6\u00d71 min hard", "Swim": "Interval Swim | MS: 10\u00d750m (2,200m total)"}, "Thu": {"Bike": "Easy Bike: 30 min", "Swim": "Interval Swim | MS: 4\u00d7300m (1,600m total)"}, "Sat": {"Bike": "Easy Bike: 20 min | (warmup)"}, "Wed": {"Run": "Easy Run: 9 km"}, "Fri": {"Run": "Easy Run: 30 min"}, "Sun": {"Run": "\ud83c\udfc6 RACE DAY | IRONMAN! |  2 Aug 2026"}}, "notes": ["RACE WEEK\nRest, hydrate,\ntrust your training!"]}};
+
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TYPES = ['Bike','Run','Swim'];
+const TYPE_ICON = {Bike:'🚴',Run:'🏃',Swim:'🏊',Race:'🏆'};
+
+let currentWeekNum = 1;
+
+function getToday() {
+  const t = new Date();
+  return new Date(t.getFullYear(), t.getMonth(), t.getDate());
+}
+
+function getWeekForToday() {
+  const today = getToday();
+  for (const [label, data] of Object.entries(PLAN)) {
+    const mon = new Date(data.mon_date);
+    const sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+    if (today >= mon && today <= sun) return data.week_num;
+  }
+  return 1;
+}
+
+function getWeekData(wn) {
+  return Object.values(PLAN).find(d => d.week_num === wn);
+}
+
+function getDayDate(monDate, dayIndex) {
+  const d = new Date(monDate);
+  d.setDate(d.getDate() + dayIndex);
+  return d;
+}
+
+function isTodayDate(d) {
+  const t = getToday();
+  return d.getFullYear()===t.getFullYear() && d.getMonth()===t.getMonth() && d.getDate()===t.getDate();
+}
+
+function formatWorkout(text) {
+  if (!text) return '';
+  const parts = text.split(' | ');
+  if (parts.length === 1) return `<div class="workout-text"><span class="main">${text}</span></div>`;
+  return `<div class="workout-text"><span class="main">${parts[0]}</span><br><span class="detail">${parts.slice(1).join(' | ')}</span></div>`;
+}
+
+function render() {
+  const data = getWeekData(currentWeekNum);
+  if (!data) return;
+
+  document.getElementById('weekLabel').textContent = `Week ${currentWeekNum}`;
+
+  // Notes
+  const notes = data.notes && data.notes.length ? data.notes.join('  •  ') : '';
+  document.getElementById('notesBar').textContent = notes;
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  // Check which types appear this week (always show all 3)
+  const types = TYPES;
+
+  // Total rows = 1 header + 3 type rows
+  // grid-template-rows
+  grid.style.gridTemplateRows = `52px repeat(${types.length}, 1fr)`;
+
+  // Row 1: column headers
+  // Empty top-left
+  const topLeft = document.createElement('div');
+  topLeft.className = 'col-header';
+  topLeft.style.borderRight = '2px solid #222';
+  grid.appendChild(topLeft);
+
+  DAYS.forEach((day, i) => {
+    const d = getDayDate(data.mon_date, i);
+    const isToday = isTodayDate(d);
+    const h = document.createElement('div');
+    h.className = 'col-header' + (isToday ? ' today-col' : '');
+    h.innerHTML = `<div class="day-num">${d.getDate()}</div><div class="day-name">${day}</div>`;
+    grid.appendChild(h);
+  });
+
+  // Type rows
+  types.forEach(type => {
+    // Type label
+    const lbl = document.createElement('div');
+    lbl.className = 'type-label';
+    lbl.innerHTML = `<span class="type-icon">${TYPE_ICON[type]}</span><span class="type-badge ${type}">${type}</span>`;
+    grid.appendChild(lbl);
+
+    // Day cells
+    DAYS.forEach((day, i) => {
+      const d = getDayDate(data.mon_date, i);
+      const isToday = isTodayDate(d);
+      const workout = data.days[day] && data.days[day][type];
+      const isRest = day === 'Mon';
+
+      const cell = document.createElement('div');
+      cell.className = 'cell' + (workout ? ` has-workout ${type}` : '') + (isToday ? ' today-col' : '');
+
+      if (isRest && type === 'Bike') {
+        cell.innerHTML = '<div class="rest-label">REST</div>';
+      } else if (workout) {
+        cell.innerHTML = formatWorkout(workout);
+      }
+
+      grid.appendChild(cell);
+    });
+  });
+}
+
+function changeWeek(dir) {
+  const newWn = currentWeekNum + dir;
+  if (newWn >= 1 && newWn <= 20) {
+    currentWeekNum = newWn;
+    render();
+  }
+}
+
+function goToToday() {
+  currentWeekNum = getWeekForToday();
+  render();
+}
+
+// Init
+currentWeekNum = getWeekForToday();
+render();
+</script>
+
+</body></html>
